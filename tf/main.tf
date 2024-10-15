@@ -54,7 +54,7 @@ module "cloudinit" {
   images = local.images
 }
 
-resource "null_resource" "run" {
+resource "null_resource" "kind-cluster" {
   depends_on = [ module.cloudinit ]
 
   for_each = local.ci_result
@@ -67,25 +67,24 @@ resource "null_resource" "run" {
     private_key = file("~/.ssh/id_rsa")
   }
 
-  ###################### KIND ####################
-
   provisioner "file" {
-    source = "../config/config.yaml"
-    destination = "/home/ubuntu/config.yaml"
+    content = templatefile("../templates/daemon.json.tpl", {
+      ip = local.ci_result[each.key].ip
+    })
+
+    destination = "/home/ubuntu/daemon.json"
   }
 
   provisioner "remote-exec" {
     scripts = [ 
-      "../scripts/kind.sh",
+      "../scripts/docker.sh",
     ]
   }
 
   provisioner "local-exec" {
-    command = "source ../scripts/finalize.sh"
-    environment = {
-      IP = local.ci_result[each.key].ip
-      NAME = each.key
-    }
+    command = templatefile("../templates/kind.cmd.tpl", {
+      ip = local.ci_result[each.key].ip
+      name = "gitops"
+    })
   }
 }
-

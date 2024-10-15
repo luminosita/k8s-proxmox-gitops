@@ -6,6 +6,10 @@ terraform {
             source  = "bpg/proxmox"
             version = "0.63.0"
         }    
+        kind = {
+            source = "tehcyx/kind"
+            version = "0.6.0"
+        }
     }
 }
 
@@ -21,3 +25,11 @@ provider "proxmox" {
       private_key         = file(var.proxmox.ssh_private_key_file)
   }
 }
+
+provider "kind" {
+}
+
+# provider "kubernetes" {
+#   config_path = pathexpand(var.cluster_config_path)
+# }
+
