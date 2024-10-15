@@ -1,4 +1,6 @@
 locals {
+  ci_result = module.cloudinit.result
+
   images = { 
     "gitops" = {
       vm_user                     = "ubuntu"
@@ -50,10 +52,6 @@ module "cloudinit" {
   }
 
   images = local.images
-}
-
-locals {
-  ci_result = module.cloudinit.result
 }
 
 resource "null_resource" "run" {
