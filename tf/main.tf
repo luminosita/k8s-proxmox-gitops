@@ -1,22 +1,57 @@
 locals {
   ci_result = module.cloudinit.result
+}
+
+module "cloudinit" {
+  source  = "../../terraform-proxmox-cloudinit" #"luminosita/cloudinit/proxmox"
+  #version = "0.0.3"
+
+  providers = {
+    proxmox = proxmox
+  }
+
+  os = { 
+    vm_base_url                 = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+    vm_base_image               = "noble-server-cloudimg-amd64.img"
+    vm_base_image_checksum      = "fad101d50b06b26590cf30542349f9e9d3041ad7929e3bc3531c81ec27f2c788"    
+    vm_base_image_checksum_alg  = "sha256"
+    vm_node_name                = "proxmox"
+  }
 
   images = { 
     "gitops" = {
-      vm_user                     = "ubuntu"
-      vm_ssh_public_key_files     = [
-        "~/.ssh/id_rsa.pub",
-        "~/.ssh/id_rsa.proxmox.pub"
-      ]
-      
       vm_id                       = 2000
       vm_name                     = "gitops"
       vm_node_name                = "proxmox"
 
       vm_cloud_init               = true
 
-      vm_ci_reboot_enabled        = true
-
+      vm_ci_user                     = "ubuntu"
+      vm_ci_ssh_public_key_files     = [
+        "~/.ssh/id_rsa.pub",
+        "~/.ssh/id_rsa.proxmox.pub"
+      ]
+      
+      vm_ci_write_files           = {
+        enabled = true
+        content = [{
+          path = "/etc/openvpn/server-pass.txt"
+          content = local.certs["server-pass.txt"]
+        }, {
+          path = "/etc/openvpn/passphrase.txt"
+          content = local.certs["passphrase.txt"]
+        }, {
+          path = "/etc/openvpn/client.conf"
+          content = templatefile("../templates/client.conf.tpl", {
+            ovpn_server = hcloud_server.mikrotik.ipv4_address
+            port = 1194
+            ca = local.certs["cert_export_MikroTik.crt"]
+            client_cert = local.certs["cert_export_chat-server@MikroTik.crt"]
+            client_key = local.certs["cert_export_chat-server@MikroTik.key"]
+          })
+        }]
+      }
+      
       vm_ci_run_cmds      = {
         enabled = true
         content = [
@@ -33,25 +68,6 @@ locals {
       }
     }
   }
-}
-
-module "cloudinit" {
-  source  = "luminosita/cloudinit/proxmox"
-  version = "0.0.3"
-
-  providers = {
-    proxmox = proxmox
-  }
-
-  os = { 
-    vm_base_url                 = "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-    vm_base_image               = "noble-server-cloudimg-amd64.img"
-    vm_base_image_checksum      = "fad101d50b06b26590cf30542349f9e9d3041ad7929e3bc3531c81ec27f2c788"    
-    vm_base_image_checksum_alg  = "sha256"
-    vm_node_name                = "proxmox"
-  }
-
-  images = local.images
 }
 
 resource "null_resource" "kind-cluster" {
