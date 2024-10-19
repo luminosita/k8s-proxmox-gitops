@@ -92,6 +92,6 @@ resource "kustomization_resource" "flux-system" {
   for_each = data.kustomization_build.flux-system.ids
 
   manifest = (
-    data.kustomization_build.test.manifests[each.value]
+    data.kustomization_build.flux-system.manifests[each.value]
   )
 }
