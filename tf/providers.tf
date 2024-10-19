@@ -6,10 +6,10 @@ terraform {
       source  = "bpg/proxmox"
       version = "0.63.0"
     }    
-    # kubectl = {
-    #   source = "gavinbunney/kubectl"
-    #   version = "1.14.0"
-    # }
+    kustomization = {
+      source  = "kbst/kustomization"
+      version = "0.9.0"
+    }
     talos = {
       source  = "siderolabs/talos"
       version = "0.6.1"
@@ -34,4 +34,8 @@ provider "helm" {
   kubernetes {
     config_path = "${path.module}/output/kube-config.yaml"
   }
+}
+
+provider "kustomization" {
+  kubeconfig_raw = module.talos-bootstrap.kube_config.kubeconfig_raw
 }

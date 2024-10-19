@@ -71,28 +71,27 @@ module "talos-bootstrap" {
   nodes = local.nodes
 }
 
-resource "helm_release" "flux" {
-  depends_on = [ local_file.kube_config ]
+# resource "helm_release" "flux" {
+#   depends_on = [ local_file.kube_config ]
 
-  name        = "flux"
+#   name        = "flux"
 
-  repository  = "https://fluxcd-community.github.io/helm-charts"
-  chart       = "flux2"
-  version     = "2.14.0"
+#   repository  = "https://fluxcd-community.github.io/helm-charts"
+#   chart       = "flux2"
+#   version     = "2.14.0"
 
-  namespace = "flux-system"
-  create_namespace = true
+#   namespace = "flux-system"
+#   create_namespace = true
+# }
+
+data "kustomization_build" "flux-system" {
+  path = "${path.module}/../app-of-apps/infra/controllers/flux"
 }
 
-resource "helm_release" "tf-controller" {
-  depends_on = [ helm_release.flux ]
+resource "kustomization_resource" "flux-system" {
+  for_each = data.kustomization_build.flux-system.ids
 
-  name        = "tf-controller"
-
-  repository  = "https://flux-iac.github.io/tofu-controller"
-  chart       = "tf-controller"
-  version     = "0.15.1"
-
-  namespace = "flux-system"
-  create_namespace = true
+  manifest = (
+    data.kustomization_build.test.manifests[each.value]
+  )
 }
