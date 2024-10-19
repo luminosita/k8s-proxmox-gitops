@@ -7,7 +7,7 @@ locals {
     "ctrl-gitops-00" = {
       host_node     = "proxmox"
       machine_type  = "controlplane"
-      ip            = "192.168.50.150"
+      ip            = "192.168.50.120"
       mac_address   = "BC:24:11:2E:C8:05"
       vm_id         = 900
       cpu           = 4
@@ -16,7 +16,7 @@ locals {
     "work-gitops-00" = {
       host_node     = "proxmox"
       machine_type  = "worker"
-      ip            = "192.168.50.155"
+      ip            = "192.168.50.125"
       mac_address   = "BC:24:11:2E:C8:06"
       vm_id         = 910
       cpu           = 4
@@ -61,8 +61,8 @@ module "talos-bootstrap" {
   }
 
   cluster = {
-    name            = "talos"
-    endpoint        = "192.168.50.150"
+    name            = "talos-gitops"
+    endpoint        = "192.168.50.120"
     gateway         = local.gateway
     talos_version   = "v1.8"
     proxmox_cluster = "proxmox"
