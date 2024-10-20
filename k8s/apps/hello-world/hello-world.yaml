@@ -26,4 +26,3 @@ spec:
     name: helloworld-output
     outputs:
     - hello_world
-    - my_sensitive_data
