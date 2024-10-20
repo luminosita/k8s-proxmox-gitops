@@ -57,7 +57,7 @@ module "talos-bootstrap" {
     source = "../../terraform-generic-talos/talos-bootstrap"
 
   cilium = {
-    values = file("${path.module}/../k8s/infra/network/cilium/values.yaml")
+    values = file("${path.module}/../config/cilium/values.yaml")
   }
 
   cluster = {
