@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
 #  - gotk-secret.yaml
 #  - gotk-components.yaml
-#  - tf-controller.yaml
+  - tf-controller.yaml
   - gotk-sync.yaml
