@@ -11,8 +11,7 @@ spec:
     branch: main
   secretRef:
     name: flux-system
-  url: https://github.com/luminosita/k8s-proxmox-gitops
-#  url: ssh://git@github.com/luminosita/k8s-proxmox-gitops
+  url: ssh://git@github.com/luminosita/k8s-proxmox-gitops
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
