@@ -71,6 +71,22 @@ module "talos-bootstrap" {
   nodes = local.nodes
 }
 
+module "sealed_secrets" {
+  depends_on = [module.talos-bootstrap]
+  source = "./bootstrap/sealed-secrets"
+
+  providers = {
+    kubernetes = kubernetes
+  }
+
+  // openssl req -x509 -days 365 -nodes -newkey rsa:4096 -keyout sealed-secrets.key -out sealed-secrets.cert -subj "/CN=sealed-secret/O=sealed-secret"
+  cert = {
+    cert = file("${path.module}/bootstrap/sealed-secrets/certificate/sealed-secrets.cert")
+    key = file("${path.module}/bootstrap/sealed-secrets/certificate/sealed-secrets.key")
+  }
+}
+
+
 # data "kustomization_build" "flux-system" {
 #   path = "${path.module}/../app-of-apps/infra/controllers/flux"
 # }

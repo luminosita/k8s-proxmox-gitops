@@ -14,6 +14,10 @@ terraform {
       source  = "siderolabs/talos"
       version = "0.6.1"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "2.32.0"
+    }
   }
 }
 
@@ -38,4 +42,11 @@ provider "helm" {
 
 provider "kustomization" {
   kubeconfig_raw = module.talos-bootstrap.kube_config.kubeconfig_raw
+}
+
+provider "kubernetes" {
+  host = module.talos-bootstrap.kube_config.kubernetes_client_configuration.host
+  client_certificate = base64decode(module.talos-bootstrap.kube_config.kubernetes_client_configuration.client_certificate)
+  client_key = base64decode(module.talos-bootstrap.kube_config.kubernetes_client_configuration.client_key)
+  cluster_ca_certificate = base64decode(module.talos-bootstrap.kube_config.kubernetes_client_configuration.ca_certificate)
 }

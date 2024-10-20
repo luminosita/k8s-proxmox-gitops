@@ -20,7 +20,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./k8s/infra/controllers/flux
+  path: ./k8s/infra
   prune: true
   sourceRef:
     kind: GitRepository
