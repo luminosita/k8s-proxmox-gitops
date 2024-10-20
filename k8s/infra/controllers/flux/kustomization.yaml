@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - gotk-secret.yaml
-  - gotk-components.yaml
-  - tf-controller.yaml
+#  - gotk-secret.yaml
+#  - gotk-components.yaml
+#  - tf-controller.yaml
   - gotk-sync.yaml
