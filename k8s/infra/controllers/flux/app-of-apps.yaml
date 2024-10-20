@@ -1,4 +1,4 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: flux-system
@@ -11,14 +11,14 @@ spec:
     name: flux-system
   url: https://github.com/luminosita/k8s-proxmox-gitops.git
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: flux-system
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./app-of-apps
+  path: ./k8s
   prune: true
   sourceRef:
     kind: GitRepository

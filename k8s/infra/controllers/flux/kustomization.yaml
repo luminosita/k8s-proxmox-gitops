@@ -4,6 +4,7 @@ metadata:
   name: tf-controller
   namespace: flux-system
 resources:
+#  - ns.yaml
   - https://github.com/fluxcd/flux2/releases/latest/download/install.yaml
   - https://raw.githubusercontent.com/flux-iac/tofu-controller/main/docs/release.yaml
   - app-of-apps.yaml
