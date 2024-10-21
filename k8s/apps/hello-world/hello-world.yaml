@@ -25,4 +25,4 @@ spec:
   writeOutputsToSecret:
     name: helloworld-output
     outputs:
-    - hello_world
+      - hello_world
