@@ -1,5 +1,5 @@
 # See https://github.com/weaveworks/weave-gitops/tree/main/charts/gitops-server
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: weave-gitops
@@ -31,11 +31,11 @@ spec:
       runAsUser: 1000
     adminUser:
       create: false
-      username: admin
+#      username: admin
       # # Change password by generating a new hash with:
       # # https://docs.gitops.weave.works/docs/configuration/securing-access-to-the-dashboard/#login-via-a-cluster-user-account
       # # bcrypt hash for password "flux"
-      passwordHash: "$2a$10$P/tHQ1DNFXdvX0zRGA8LPeSOyb0JXq9rP3fZ4W8HGTpLV7qHDlWhe"
+ #     passwordHash: "$2a$10$P/tHQ1DNFXdvX0zRGA8LPeSOyb0JXq9rP3fZ4W8HGTpLV7qHDlWhe"
     ingress:
       enabled: false
       className: nginx
