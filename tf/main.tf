@@ -86,9 +86,8 @@ module "sealed_secrets" {
   }
 }
 
-
 # data "kustomization_build" "flux-system" {
-#   path = "${path.module}/../app-of-apps/infra/controllers/flux"
+#   path = "${path.module}/../k8s/infra/controllers/flux"
 # }
 
 # resource "kustomization_resource" "flux-system" {
