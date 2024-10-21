@@ -86,14 +86,14 @@ module "sealed_secrets" {
   }
 }
 
-data "kustomization_build" "flux-system" {
-  path = "${path.module}/../k8s/infra/controllers/flux"
-}
+# data "kustomization_build" "flux-system" {
+#   path = "${path.module}/../k8s/infra/controllers/flux"
+# }
 
-resource "kustomization_resource" "flux-system" {
-  for_each = data.kustomization_build.flux-system.ids
+# resource "kustomization_resource" "flux-system" {
+#   for_each = data.kustomization_build.flux-system.ids
 
-  manifest = (
-    data.kustomization_build.flux-system.manifests[each.value]
-  )
-}
+#   manifest = (
+#     data.kustomization_build.flux-system.manifests[each.value]
+#   )
+# }
