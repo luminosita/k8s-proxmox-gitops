@@ -8,7 +8,7 @@ terraform {
     }    
     kustomization = {
       source  = "kbst/kustomization"
-      version = "0.9.0"
+      version = "0.9.6"
     }
     talos = {
       source  = "siderolabs/talos"
