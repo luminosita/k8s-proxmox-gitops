@@ -45,21 +45,22 @@ module "talos-bootstrap" {
   nodes = var.talos_nodes
 }
 
-# module "sealed_secrets" {
-#   depends_on = [module.talos-bootstrap]
-#   source = "../../terraform-generic-talos/k8s-sealed-secrets"
+module "sealed_secrets" {
+  depends_on = [module.talos-bootstrap]
+  source = "../../terraform-generic-talos/k8s-sealed-secrets"
 
-#   providers = {
-#     kubernetes = kubernetes
-#   }
+  providers = {
+    kubernetes = kubernetes
+  }
 
-#   // openssl req -x509 -days 365 -nodes -newkey rsa:4096 -keyout sealed-secrets.key -out sealed-secrets.cert -subj "/CN=sealed-secret/O=sealed-secret"
-#   cert = {
-#     cert = file("${path.module}/../config/certificate/sealed-secrets.cert")
-#     key = file("${path.module}/../config/certificate/sealed-secrets.key")
-#   }
-# }
+  // openssl req -x509 -days 365 -nodes -newkey rsa:4096 -keyout sealed-secrets.key -out sealed-secrets.cert -subj "/CN=sealed-secret/O=sealed-secret"
+  cert = {
+    cert = file("${path.module}/../config/certificate/sealed-secrets.cert")
+    key = file("${path.module}/../config/certificate/sealed-secrets.key")
+  }
+}
 
+#FIXME: XXX
 # module "gitops" {
 #   depends_on = [module.talos-bootstrap]
 #   source = "./gitops"
