@@ -1,3 +1,7 @@
+## Issues
+- [ ] "scripts" folder
+- [ ] local vars into proper vars
+
 ## 🏗️ Work in Progress
 
 - [ ] Proxmox Network Topography

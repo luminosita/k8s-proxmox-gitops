@@ -5,13 +5,13 @@ include common.mk
 vm:
 	$(info TERRAFORM: Creating VM)
 	cd tf && \
-		terraform init && \
-		terraform plan -out vm.tfplan && \
-		terraform apply vm.tfplan
+		tofu init && \
+		tofu plan -out vm.tfplan && \
+		tofu apply vm.tfplan
 
 destroy:
 	$(info TERRAFORM: Destroying VM)
 	cd tf && \
-		terraform plan -destroy -out=destroy.tfplan && \
-		terraform apply destroy.tfplan
+		tofu plan -destroy -out=destroy.tfplan && \
+		tofu apply destroy.tfplan
 

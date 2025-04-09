@@ -1,138 +1,71 @@
-locals {
-  gateway = "192.168.50.1"
-
-  talos_image = module.talos-image.result
-
-  nodes = {
-    "ctrl-gitops-00" = {
-      host_node     = "proxmox"
-      machine_type  = "controlplane"
-      ip            = "192.168.50.120"
-      mac_address   = "BC:24:11:2E:C8:05"
-      vm_id         = 900
-      cpu           = 4
-      ram_dedicated = 2048
-    }
-    "work-gitops-00" = {
-      host_node     = "proxmox"
-      machine_type  = "worker"
-      ip            = "192.168.50.125"
-      mac_address   = "BC:24:11:2E:C8:06"
-      vm_id         = 910
-      cpu           = 4
-      ram_dedicated = 4096
-    }
-  }
-}
-
 module "talos-image" {
   source = "../../terraform-generic-talos/talos-image"
 
-  image = {
-    version = "v1.7.6"
-    update_version = "v1.7.6" # renovate: github-releases=siderolabs/talos
-    name_prefix = "talos-gitops"
+  providers = {
+    talos = talos
   }
+
+  image = var.talos_image
 }
 
-module "proxmox" {
+module "proxmox-vm" {
   depends_on = [ module.talos-image ]
 
-  source = "./proxmox"
+  source = "../../terraform-generic-talos/proxmox-vm"
 
   providers = {
     proxmox = proxmox
   }
 
-  image = module.talos-image.result
+  image = {
+    file_name = module.talos-image.result.file_name
+    file_name_update = module.talos-image.result.file_name_update
+    url = module.talos-image.result.url
+    url_update = module.talos-image.result.url_update
 
-  nodes = local.nodes
+    proxmox_datastore = var.talos_image.proxmox_datastore
+  }
 
-  gateway = local.gateway
+  nodes = var.talos_nodes
+
+  network = var.talos_cluster_config.network
 }
 
 module "talos-bootstrap" {
-  depends_on = [ module.proxmox ]
+  depends_on = [ module.proxmox-vm ]
 
-    source = "../../terraform-generic-talos/talos-bootstrap"
-
-  cilium = {
-    values = file("${path.module}/../config/cilium/values.yaml")
-  }
-
-  cluster = {
-    name            = "talos-gitops"
-    endpoint        = "192.168.50.120"
-    gateway         = local.gateway
-    talos_version   = "v1.8"
-    proxmox_cluster = "proxmox"
-  }
-
-  nodes = local.nodes
-}
-
-module "sealed_secrets" {
-  depends_on = [module.talos-bootstrap]
-  source = "./bootstrap/sealed-secrets"
+  source = "../../terraform-generic-talos/talos-bootstrap"
 
   providers = {
-    kubernetes = kubernetes
+    talos = talos
   }
 
-  // openssl req -x509 -days 365 -nodes -newkey rsa:4096 -keyout sealed-secrets.key -out sealed-secrets.cert -subj "/CN=sealed-secret/O=sealed-secret"
-  cert = {
-    cert = file("${path.module}/bootstrap/sealed-secrets/certificate/sealed-secrets.cert")
-    key = file("${path.module}/bootstrap/sealed-secrets/certificate/sealed-secrets.key")
-  }
+  cluster = var.talos_cluster_config
+
+  nodes = var.talos_nodes
 }
 
-data "kustomization_build" "flux-system" {
-  path = "${path.module}/../k8s/infra/controllers/flux"
-}
+# module "sealed_secrets" {
+#   depends_on = [module.talos-bootstrap]
+#   source = "../../terraform-generic-talos/k8s-sealed-secrets"
 
-# first loop through resources in ids_prio[0]
-resource "kustomization_resource" "flux-system-0" {
-  for_each = data.kustomization_build.flux-system.ids_prio[0]
+#   providers = {
+#     kubernetes = kubernetes
+#   }
 
-  manifest = (
-    contains(["_/Secret"], regex("(?P<group_kind>.*/.*)/.*/.*", each.value)["group_kind"])
-    ? sensitive(data.kustomization_build.flux-system.manifests[each.value])
-    : data.kustomization_build.flux-system.manifests[each.value]
-  )
-}
+#   // openssl req -x509 -days 365 -nodes -newkey rsa:4096 -keyout sealed-secrets.key -out sealed-secrets.cert -subj "/CN=sealed-secret/O=sealed-secret"
+#   cert = {
+#     cert = file("${path.module}/../config/certificate/sealed-secrets.cert")
+#     key = file("${path.module}/../config/certificate/sealed-secrets.key")
+#   }
+# }
 
-# then loop through resources in ids_prio[1]
-# and set an explicit depends_on on kustomization_resource.p0
-# wait 2 minutes for any deployment or daemonset to become ready
-resource "kustomization_resource" "flux-system-1" {
-  for_each = data.kustomization_build.flux-system.ids_prio[1]
+# module "gitops" {
+#   depends_on = [module.talos-bootstrap]
+#   source = "./gitops"
 
-  manifest = (
-    contains(["_/Secret"], regex("(?P<group_kind>.*/.*)/.*/.*", each.value)["group_kind"])
-    ? sensitive(data.kustomization_build.flux-system.manifests[each.value])
-    : data.kustomization_build.flux-system.manifests[each.value]
-  )
-  
-  wait = true
-  
-  timeouts {
-    create = "2m"
-    update = "2m"
-  }
+#   providers = {
+#     kustomization = kustomization
+#   }
+# }
 
-  depends_on = [ kustomization_resource.flux-system-0 ]
-}
-
-# finally, loop through resources in ids_prio[2]
-# and set an explicit depends_on on kustomization_resource.p1
-resource "kustomization_resource" "flux-system-2" {
-  for_each = data.kustomization_build.flux-system.ids_prio[2]
-
-  manifest = (
-    contains(["_/Secret"], regex("(?P<group_kind>.*/.*)/.*/.*", each.value)["group_kind"])
-    ? sensitive(data.kustomization_build.flux-system.manifests[each.value])
-    : data.kustomization_build.flux-system.manifests[each.value]
-  )
-
-  depends_on = [ kustomization_resource.flux-system-1 ]
-}

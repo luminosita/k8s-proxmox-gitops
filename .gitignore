@@ -7,10 +7,11 @@ output
 
 **/.DS_Store
 
-*.tfvars
 *.tfvars.json
 *.lock.hcl
 
 output/
 
 **/tmp
+
+config/certificate

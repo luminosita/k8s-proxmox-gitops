@@ -1,1 +1,3 @@
 # gitops
+
+- [ ] Sealed secrets certificates
