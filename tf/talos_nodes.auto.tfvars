@@ -7,7 +7,7 @@ talos_nodes = {
     mac_address   = "BC:24:11:2E:C8:05"
     vm_id         = 900
     cpu           = 4
-    ram_dedicated = 2048
+    ram_dedicated = 4096
 #    igpu          = true
     datastore_id  = "vm-disks"
   }

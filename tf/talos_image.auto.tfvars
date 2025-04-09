@@ -1,9 +1,9 @@
 talos_image = {
-  version        = "v1.9.5"
-  update_version = "v1.9.5" # renovate: github-releases=siderolabs/talos
+  version        = "v1.9.2"
+  update_version = "v1.9.2" # renovate: github-releases=siderolabs/talos
 
-  name_prefix       = "talos-gitops"
-  proxmox_datastore = "local"
+  image_filename_prefix = "talos-gitops"
+  proxmox_datastore     = "local"
 
   #  schematic_path = "talos/image/schematic.yaml"
   # Point this to a new schematic file to update the schematic

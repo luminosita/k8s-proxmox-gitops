@@ -4,8 +4,8 @@ variable "proxmox" {
     endpoint = string
     insecure = bool
 
-    ssh_username            = string
-    ssh_private_key_file    = string
+    ssh_username         = string
+    ssh_private_key_file = string
 
     iso_datastore = string
   })
@@ -21,15 +21,15 @@ variable "proxmox_api_token" {
 variable "talos_image" {
   description = "Talos image configuration"
   type = object({
-    factory_url       = optional(string, "https://factory.talos.dev")
-    schematic         = optional(string, "schematic.yaml")
-    version           = string
-    update_schematic  = optional(string)
-    update_version    = optional(string)
-    arch              = optional(string, "amd64")
-    platform          = optional(string, "nocloud")
-    name_prefix       = string
-    proxmox_datastore = string
+    factory_url           = optional(string, "https://factory.talos.dev")
+    schematic             = optional(string, "schematic.yaml")
+    version               = string
+    update_schematic      = optional(string)
+    update_version        = optional(string)
+    arch                  = optional(string, "amd64")
+    platform              = optional(string, "nocloud")
+    image_filename_prefix = string
+    proxmox_datastore     = string
   })
 }
 
@@ -44,7 +44,7 @@ variable "talos_cluster_config" {
       gateway     = string
       subnet_mask = optional(string, "24")
     })
-    talos_machine_config_version = optional(string)
+    talos_machine_config_version = string
     kubernetes_version           = string
     proxmox_cluster              = string
     extra_manifests              = optional(list(string))
