@@ -23,7 +23,7 @@ module "proxmox-vm" {
     url = module.talos-image.result.url
     url_update = module.talos-image.result.url_update
 
-    proxmox_datastore = var.talos_image.proxmox_datastore
+    datastore_id = var.talos_image.datastore_id
   }
 
   nodes = var.talos_nodes
@@ -55,8 +55,8 @@ module "sealed_secrets" {
 
   // openssl req -x509 -days 365 -nodes -newkey rsa:4096 -keyout sealed-secrets.key -out sealed-secrets.cert -subj "/CN=sealed-secret/O=sealed-secret"
   cert = {
-    cert = file("${path.module}/../config/certificate/sealed-secrets.cert")
-    key = file("${path.module}/../config/certificate/sealed-secrets.key")
+    cert = file("${path.root}/${var.sealed_secrets_config.certificate_path}")
+    key = file("${path.root}/${var.sealed_secrets_config.certificate_key_path}")
   }
 }
 

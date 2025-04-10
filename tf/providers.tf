@@ -34,12 +34,6 @@ provider "proxmox" {
   }
 }
 
-provider "helm" {
-  kubernetes {
-    config_path = "${path.module}/output/kube-config.yaml"
-  }
-}
-
 provider "kustomization" {
   kubeconfig_raw = module.talos-bootstrap.kube_config.kubeconfig_raw
 }

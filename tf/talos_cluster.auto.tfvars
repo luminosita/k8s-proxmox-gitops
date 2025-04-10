@@ -14,11 +14,11 @@ talos_cluster_config = {
   # The version of talos features to use in generated machine configuration. Generally the same as image version.
   # See https://github.com/siderolabs/terraform-provider-talos/blob/main/docs/data-sources/machine_configuration.md
   talos_machine_config_version = "v1.9.2"
-  proxmox_cluster              = "proxmox"
+  region                       = "proxmox"
   kubernetes_version           = "v1.32.3" # renovate: github-releases=kubernetes/kubernetes
   cilium = {
     bootstrap_manifest_path = "inline-manifests/cilium-install.yaml.tftpl"
-    values_file_path        = "../config/cilium/values.yaml"
+    values_file_path        = "config/cilium/values.yaml"
     version                 = "v1.17.2"
   }
   extra_manifests = [

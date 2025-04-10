@@ -1,8 +1,10 @@
 variable "proxmox" {
   description = "Proxmox server configuration"
   type = object({
-    endpoint = string
-    insecure = bool
+    name         = string
+    cluster_name = string
+    endpoint     = string
+    insecure     = bool
 
     ssh_username         = string
     ssh_private_key_file = string
@@ -21,15 +23,15 @@ variable "proxmox_api_token" {
 variable "talos_image" {
   description = "Talos image configuration"
   type = object({
-    factory_url           = optional(string, "https://factory.talos.dev")
-    schematic             = optional(string, "schematic.yaml")
+    factory_url           = optional(string)
+    schematic             = optional(string)
     version               = string
     update_schematic      = optional(string)
     update_version        = optional(string)
-    arch                  = optional(string, "amd64")
-    platform              = optional(string, "nocloud")
+    arch                  = optional(string)
+    platform              = optional(string)
     image_filename_prefix = string
-    proxmox_datastore     = string
+    datastore_id          = string
   })
 }
 
@@ -38,22 +40,22 @@ variable "talos_cluster_config" {
   type = object({
     name          = string
     endpoint      = string
-    endpoint_port = optional(string, "6443")
+    endpoint_port = optional(string)
     vip           = optional(string)
     network = object({
       gateway     = string
-      subnet_mask = optional(string, "24")
+      subnet_mask = optional(string)
     })
     talos_machine_config_version = string
     kubernetes_version           = string
-    proxmox_cluster              = string
+    region                       = string
     extra_manifests              = optional(list(string))
     kubelet                      = optional(string)
     api_server                   = optional(string)
     cilium = object({
       version = string
 
-      bootstrap_manifest_path = optional(string, "./inline-manifests/cilium-install.tftpl")
+      bootstrap_manifest_path = optional(string)
       values_file_path        = string
     })
   })
@@ -82,3 +84,12 @@ variable "talos_nodes" {
     // @formatter:on
   }
 }
+
+variable "sealed_secrets_config" {
+  description = "Sealed-secrets configuration"
+  type = object({
+    certificate_path     = string
+    certificate_key_path = string
+  })
+}
+
