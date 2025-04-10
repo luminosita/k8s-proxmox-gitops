@@ -1,5 +1,5 @@
 module "talos-image" {
-  source = "../../terraform-generic-talos/talos-image"
+  source = "../../modules/terraform-talos-image"
 
   providers = {
     talos = talos
@@ -11,7 +11,7 @@ module "talos-image" {
 module "proxmox-vm" {
   depends_on = [ module.talos-image ]
 
-  source = "../../terraform-generic-talos/proxmox-vm"
+  source = "../../modules/terraform-proxmox-vm"
 
   providers = {
     proxmox = proxmox
@@ -34,7 +34,7 @@ module "proxmox-vm" {
 module "talos-bootstrap" {
   depends_on = [ module.proxmox-vm ]
 
-  source = "../../terraform-generic-talos/talos-bootstrap"
+  source = "../../modules/terraform-talos-bootstrap"
 
   providers = {
     talos = talos
@@ -46,8 +46,8 @@ module "talos-bootstrap" {
 }
 
 module "sealed_secrets" {
-  depends_on = [module.talos-bootstrap]
-  source = "../../terraform-generic-talos/k8s-sealed-secrets"
+  depends_on = [ module.talos-bootstrap ]
+  source = "../../modules/terraform-sealed-secrets"
 
   providers = {
     kubernetes = kubernetes
@@ -62,7 +62,7 @@ module "sealed_secrets" {
 
 #FIXME: XXX
 # module "gitops" {
-#   depends_on = [module.talos-bootstrap]
+#   depends_on = [ module.sealed_secrets ]
 #   source = "./gitops"
 
 #   providers = {
