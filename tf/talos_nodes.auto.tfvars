@@ -19,7 +19,7 @@ talos_nodes = {
   #   vm_id         = 910
   #   cpu           = 4
   #   ram_dedicated = 4096
-  #   igpu          = true
+  #   #igpu          = true
   #   #update        = true
   #   datastore_id  = "vm-disks"
   # }
