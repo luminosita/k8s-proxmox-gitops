@@ -1,5 +1,5 @@
 talos_cluster_config = {
-  name = "talos"
+  name = "talos-gitops"
   # This should point to the vip as below(if nodes on layer 2) or one of the nodes (if nodes not on layer 2)
   # Note: Nodes are not on layer 2 if there is a router between them (even a mesh router)
   #       Not sure how it works if connected to the same router via ethernet (does it act as a switch then???)
