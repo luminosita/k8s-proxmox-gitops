@@ -7,10 +7,6 @@ talos_cluster_config = {
   # Note This is Kubernetes API endpoint. Different from all mentions of Talos endpoints.
   endpoint = "192.168.50.120"
   #vip      = "192.168.50.99"
-  network = {
-    gateway     = "192.168.50.1"
-    subnet_mask = "24"
-  }
   # The version of talos features to use in generated machine configuration. Generally the same as image version.
   # See https://github.com/siderolabs/terraform-provider-talos/blob/main/docs/data-sources/machine_configuration.md
   talos_machine_config_version = "v1.9.2"

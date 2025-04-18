@@ -27,8 +27,6 @@ module "proxmox-vm" {
   }
 
   nodes = var.talos_nodes
-
-  network = var.talos_cluster_config.network
 }
 
 module "talos-bootstrap" {
