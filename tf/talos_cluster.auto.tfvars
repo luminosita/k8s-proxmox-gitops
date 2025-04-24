@@ -5,7 +5,7 @@ talos_cluster_config = {
   #       Not sure how it works if connected to the same router via ethernet (does it act as a switch then???)
   # Ref: https://www.talos.dev/v1.9/talos-guides/network/vip/#requirements
   # Note This is Kubernetes API endpoint. Different from all mentions of Talos endpoints.
-  endpoint = "192.168.50.120"
+  endpoint = "192.168.50.60"
   #vip      = "192.168.50.99"
   # The version of talos features to use in generated machine configuration. Generally the same as image version.
   # See https://github.com/siderolabs/terraform-provider-talos/blob/main/docs/data-sources/machine_configuration.md

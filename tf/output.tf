@@ -4,8 +4,8 @@ output "kube_config" {
 }
 
 output "versions" {
-  value     = {
-    talos_version = var.talos_cluster_config.talos_machine_config_version
+  value = {
+    talos_version      = var.talos_cluster_config.talos_machine_config_version
     kubernetes_version = var.talos_cluster_config.kubernetes_version
   }
 }
@@ -13,6 +13,12 @@ output "versions" {
 output "talos_config" {
   value     = module.talos-bootstrap.client_configuration.talos_config
   sensitive = true
+}
+
+output "proxmox_vm" {
+  value = {
+    ipv4_addresses = local.vm_ips
+  }
 }
 
 resource "local_file" "machine_configs" {

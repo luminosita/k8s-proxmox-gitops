@@ -61,6 +61,7 @@ variable "talos_nodes" {
   description = "Configuration for cluster nodes"
   type = map(object({
     host_node    = string
+    node_group   = optional(string)
     machine_type = string
     datastore_id = string
     network = object({
